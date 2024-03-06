@@ -1,0 +1,12 @@
+  <button class="btn" id="newPost" onclick="(window.location='/newPost')">+New Post</button>
+
+{{#each posts as |post| }}
+<div class="card">
+  <div class="">
+    <h2 class="card card-header"> {{post.title}} {{post.date_created}}</h2>
+
+    <p class="card-body">{{post.content}}</p>
+  </div>
+</div>
+{{/each}}
+

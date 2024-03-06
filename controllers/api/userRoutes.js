@@ -1,8 +1,11 @@
 const router = require('express').Router();
-const { User } = require('../../models');
+const { User, Post } = require('../../models');
+const withAuth = require('../../utils/auth');
 
+// Login
 router.post('/login', async (req, res) => {
   try {
+    console.log
     const userData = await User.findOne({ where: { email: req.body.email } });
 
     if (!userData) {
@@ -33,6 +36,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Logout
 router.post('/logout', (req, res) => {
   if (req.session.logged_in) {
     req.session.destroy(() => {
@@ -41,6 +45,48 @@ router.post('/logout', (req, res) => {
   } else {
     res.status(404).end();
   }
+});
+
+//Create new user
+router.post('/', async (req, res) => {
+    try {
+      const dbUserData = await User.create({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+      });
+  
+      // TODO: Set up sessions with the 'loggedIn' variable
+      req.session.save(() => {
+        // TODO: Set the 'loggedIn' session variable to 'true'
+        req.session.loggedIn = true;
+  
+        res.status(200).json(dbUserData);
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  });
+
+router.post('/newPost', withAuth, async (req, res) => {
+    try {
+        const userData = await User.findOne({ where: { id: req.session.user_id } })
+
+        const postData = req.body;
+        const newPost = await Post.create({
+            title: req.body.title,
+            content: req.body.content,
+            creator_name: userData.username,
+            creator_id: userData.id,
+        });
+        console.log(userData.id);
+        console.log(req.body);
+        res.status(200).json(newPost)
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
 });
 
 module.exports = router;

@@ -12,13 +12,15 @@
     <header class="display-block justify-space-between align-center p-2">
 
         <nav>
-            <button class="btn" id="home">Home</button>
-            <button class="btn" id="dashboard">Dashboard</button>
+            <button class="btn" id="home" onclick="(window.location='/')">Home</button>
+            <button class="btn" id="dashboard" onclick="(window.location='/dashboard')">Dashboard</button>
             {{#if logged_in}}
             <button class="btn" id="logout">Logout</button>
             {{else}}
-            <button class="btn" id="login">Login</button>
+            <button class="btn" id="login" onclick="(window.location='/login')">Login</button>
+            <button class="btn" id="createUser" onclick="(window.location='/newUser')">Create Account</button>
             {{/if}}
+            
         </nav>
 
         <h1 class="ml-3">
